@@ -1,5 +1,7 @@
 public class Clinic {
 
+
+
         public Clinic(/* ... */) {
         }
 
@@ -7,7 +9,12 @@ public class Clinic {
             // TODO
         }
 
-        // D'autres méthodes peuvent être nécessaires
+        public boolean estVide(){
+            return true;
+        }
+
+
+    // D'autres méthodes peuvent être nécessaires
 
     }
 
