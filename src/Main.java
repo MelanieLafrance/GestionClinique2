@@ -8,5 +8,7 @@ public class Main {
 
         // Clinic clinic = new Clinic(doctorTriageType, radiologyTriageType /* , ... */)
         // clinic.triagePatient("John", 4, enums.VisibleSymptom.MIGRAINE);
+
+        System.out.println("this works");
     }
 }
