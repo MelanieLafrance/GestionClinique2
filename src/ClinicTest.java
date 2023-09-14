@@ -16,14 +16,14 @@ public class ClinicTest {
 
     @Test
     public void CliniqueInitialementVide() {
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
 
         assertTrue(clinique.estVide());
     }
 
     @Test
     public void SiNouveauPatient_AlorsCliniqueNonVide() {
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
 
         clinique.ajoutPatient(PATIENT_PAR_DEFAUT);
 
@@ -32,7 +32,7 @@ public class ClinicTest {
 
     @Test
     public void SiPatientRetire_AlorsCliniqueEstVide(){
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
 
         clinique.ajoutPatient(PATIENT_PAR_DEFAUT);
         clinique.retirePatientMedecin();
@@ -42,7 +42,7 @@ public class ClinicTest {
 
     @Test
     public void SiPatient_AlorsPremierFileMedecin(){
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
 
         clinique.ajoutPatient(PATIENT_PAR_DEFAUT);
         Patient premierPatient = clinique.premierPatientMedecin();
@@ -52,7 +52,7 @@ public class ClinicTest {
 
     @Test
     public void SiPatientMigraine_AlorsPasDansRadiologie(){
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
         Patient patientMigraine = new Patient(NOM_PAR_DEFAUT, MIGRAINE, GRAVITE_PAR_DEFAUT);
 
         clinique.ajoutPatient(patientMigraine);
@@ -63,7 +63,7 @@ public class ClinicTest {
 
     @Test
     public void SiSecondPatient_AlorsIlEstSecond(){
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
         clinique.ajoutPatient(PATIENT_PAR_DEFAUT);
         Patient patientFlu = new Patient(NOM_PAR_DEFAUT, FLU, GRAVITE_PAR_DEFAUT);
 
@@ -76,7 +76,7 @@ public class ClinicTest {
 
     @Test
     public void SiSecondPatientFLU_AlorsPasDansRadiologie(){
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
         clinique.ajoutPatient(PATIENT_PAR_DEFAUT);
         Patient patientFlu = new Patient(NOM_PAR_DEFAUT, FLU, GRAVITE_PAR_DEFAUT);
 
@@ -88,7 +88,7 @@ public class ClinicTest {
 
     @Test
     public void SiSprain_AlorsPremierRadiologie(){
-        Clinic clinique = new Clinic(FIFO);
+        Clinic clinique = new Clinic(FIFO, FIFO);
         Patient patientSprain = new Patient(NOM_PAR_DEFAUT, SPRAIN, GRAVITE_PAR_DEFAUT);
 
         clinique.ajoutPatient(patientSprain);
@@ -99,7 +99,7 @@ public class ClinicTest {
 
     @Test
     public void GivenGravitySortingDoctorList_whenSecondPatientWithPriority_ThenFirstInRadiology(){
-        Clinic clinique = new Clinic(GRAVITY);
+        Clinic clinique = new Clinic(GRAVITY, FIFO);
         clinique.ajoutPatient(PATIENT_PAR_DEFAUT);
         Patient patientFlu7 = new Patient(NOM_PAR_DEFAUT, FLU, 7);
 
@@ -110,13 +110,25 @@ public class ClinicTest {
     }
 
     @Test
-    public void GivenGravitySortingDoctorList_whenSecondPatientForRadiologyWithPriority_ThenIsSecondInRadiology(){
-        Clinic clinique = new Clinic(GRAVITY);
+    public void GivenGravitySortingDOCTORList_whenSecondPatientForRadiologyWithPriority_ThenIsSecondInRadiology(){
+        Clinic clinique = new Clinic(GRAVITY, FIFO);
         clinique.ajoutPatient(PATIENT_RADIOLOGIE);
         Patient patientBrokenBone7 = new Patient(NOM_PAR_DEFAUT, BROKEN_BONE, 7);
 
         clinique.ajoutPatient(patientBrokenBone7);
         clinique.retirePatientRadiologie();
+        Patient secondPatient= clinique.premierPatientRadiologie();
+
+        assertEquals(secondPatient, patientBrokenBone7);
+    }
+
+    @Test
+    public void GivenGravitySortingRADIOLOGYList_whenSecondPatientForRadiologyWithPriority_ThenIsFirstInRadiology(){
+        Clinic clinique = new Clinic(GRAVITY, GRAVITY);
+        clinique.ajoutPatient(PATIENT_RADIOLOGIE);
+        Patient patientBrokenBone7 = new Patient(NOM_PAR_DEFAUT, BROKEN_BONE, 7);
+
+        clinique.ajoutPatient(patientBrokenBone7);
         Patient premierPatient= clinique.premierPatientRadiologie();
 
         assertEquals(premierPatient, patientBrokenBone7);
