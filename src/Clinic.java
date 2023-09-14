@@ -1,41 +1,57 @@
+import enums.TriageType;
 import enums.VisibleSymptom;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Clinic {
-    private Queue<VisibleSymptom> ListeMedecin = new LinkedList<VisibleSymptom>();
-    private Queue<VisibleSymptom> ListeRadiologie = new LinkedList<VisibleSymptom>();
+    private Deque<Patient> ListeMedecin = new LinkedList<Patient>();
+    private Deque<Patient> ListeRadiologie = new LinkedList<Patient>();
 
-    public Clinic(/*doctorTriageType, radiologyTriageType*/) {
-    }
+    private final TriageType DoctorTriageType;
 
-    public void triagePatient(String name, int gravity, VisibleSymptom visibleSymptom) {
-        // TODO
+    public Clinic(TriageType doctorTriageType /*radiologyTriageType*/) {
+        DoctorTriageType = doctorTriageType;
     }
 
     public boolean estVide(){
         return ListeMedecin.isEmpty();
     }
 
-    public void ajoutPatient(VisibleSymptom visibleSymptom) {
-        ListeMedecin.offer(visibleSymptom);
+    public void ajoutPatient(Patient patient){
+        ajoutPatient(patient.getName(), patient.getSymptom(), patient.getGravity());
+    }
+
+    public void ajoutPatient(String name, VisibleSymptom visibleSymptom, int gravity){
+        Patient patient = new Patient(name, visibleSymptom, gravity);
+
+        if (DoctorTriageType==TriageType.GRAVITY && gravity > 5){
+            ListeMedecin.offerFirst(patient);
+        } else {
+            ListeMedecin.offer(patient);
+        }
+
         if (visibleSymptom == VisibleSymptom.SPRAIN || visibleSymptom == VisibleSymptom.BROKEN_BONE){
-            ListeRadiologie.offer(visibleSymptom);
+            ListeRadiologie.offer(patient);
         }
     }
 
-    public void retirePatient() {
+    public Patient retirePatientMedecin() {
+        Patient premierPatient = premierPatientMedecin();
         ListeMedecin.poll();
+        return premierPatient;
     }
 
-    public VisibleSymptom premierPatientMedecin() {
+    public Patient retirePatientRadiologie() {
+        Patient premierPatient = premierPatientRadiologie();
+        ListeRadiologie.poll();
+        return premierPatient;
+    }
+
+    public Patient premierPatientMedecin() {
         return ListeMedecin.peek();
     }
 
-    public VisibleSymptom premierPatientRadiologie() {
+    public Patient premierPatientRadiologie() {
         return ListeRadiologie.peek();
     }
 }
